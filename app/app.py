@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import cv2
 import os
+from config import Config
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
-UPLOAD_FOLDER = 'app/uploads'
-ALLOWED_EXTENSIONS = {'mp4', 'avi'}
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = app.config["UPLOAD_FOLDER"]
+ALLOWED_EXTENSIONS = app.config["ALLOWED_EXTENSIONS"]
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -26,10 +26,10 @@ def extract_frames():
         return jsonify({'error': 'No selected file'})
 
     if file and allowed_file(file.filename):
-        video_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        video_path = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(video_path)
 
-        frames_folder = os.path.join(app.config['UPLOAD_FOLDER'], 'frames')
+        frames_folder = os.path.join(UPLOAD_FOLDER, 'frames')
         os.makedirs(frames_folder, exist_ok=True)
 
         # Use OpenCV to capture frames from the video
@@ -52,4 +52,4 @@ def extract_frames():
     return jsonify({'error': 'Invalid file format'})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=app.config["DEBUG"], host='0.0.0.0', port=80)
