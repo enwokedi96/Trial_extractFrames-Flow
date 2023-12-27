@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thumbnails</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        #thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .thumbnail {
+            margin: 10px;
+        }
+        .thumbnail img {
+            max-width: 100px;
+            max-height: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thumbnails</h1>
+    <div id="thumbnails">
+        {% for thumbnail in thumbnails %} 
+            <div class="thumbnail">
+                <img src="{{ url_for('static', filename='frames/'+thumbnail['path']) }}" alt="{{ thumbnail['filename'] }}">
+                <p>{{ thumbnail['filename'] }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
